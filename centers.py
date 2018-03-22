@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 
 # open sample image
 img = cv2.imread('skittles.png', -1)
