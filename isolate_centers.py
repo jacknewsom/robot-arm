@@ -1,24 +1,25 @@
 import cv2
 import numpy as np
 
-# please don't flay me, want to get this working before I get it working fast
+# this could/should be optimized with numpy array functions
 def center_locations(image, radius=5):
     def whiteout(image, loc, radius):
         for i in range(loc[0] - radius, loc[0] + radius):
             for j in range(loc[1] - radius, loc[1] - radius):
-                image[i, j] = 255
-
+                image.itemset((i, j), 255)
         return image
 
     locs = []
     x, y = image.shape
+    copy = image
     for i in range(x):
         for j in range(y):
             if (image[i, j] == 0):
                 locs.append([j, i])
-                image = whiteout(image, (i, j), radius)
+                image[(i-radius):(i+radius), (j-radius):(j+radius)] = 255
+                # image = whiteout(image, (i, j), radius)
 
-    return np.array(locs)
+    return (np.array(locs), image)
 
 # given image of skittles, return image containing only black dots at skittle centers
 def isolate_centers(image):
@@ -52,21 +53,14 @@ def isolate_centers(image):
     inv_bg = cv2.dilate(inv_bg, kernel, iterations=7)
 
     # add thresholded image to inverse background to isolate centers
-    return threshold + inv_bg
+    centers = threshold + inv_bg
+    ret, centers = cv2.threshold(centers, 0, 255, cv2.THRESH_BINARY)
+    return centers
 
+def find_skittles(image):
+    centers = isolate_centers(image)
+    locs, drawing = center_locations(centers)
+    for loc in locs:
+        image = cv2.circle(image, tuple(loc), 10, (0, 0, 255), 1)
 
-
-
-image = cv2.imread('skittles.png')
-centers = isolate_centers(image)
-locs = center_locations(centers)
-print(locs)
-
-for loc in locs:
-    image = cv2.circle(image, tuple(loc), 10, (0,0, 255), 1)
-
-
-cv2.imwrite("circled.png", image)
-cv2.imshow("img",image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    return image
