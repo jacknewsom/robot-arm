@@ -1,28 +1,22 @@
 import cv2
 import numpy as np
+import math
 
-# this could/should be optimized with numpy array functions
 def center_locations(image, radius=5):
-    def whiteout(image, loc, radius):
-        for i in range(loc[0] - radius, loc[0] + radius):
-            for j in range(loc[1] - radius, loc[1] - radius):
-                image.itemset((i, j), 255)
-        return image
-
+    '''Returns list of tuples of centers of skittles '''
     locs = []
     x, y = image.shape
-    copy = image
+    zeros = np.greater(image, 0)
     for i in range(x):
         for j in range(y):
-            if (image[i, j] == 0):
+            if (not zeros[i ,j]):
                 locs.append([j, i])
+                # set surrounding area to white to avoid duplication
                 image[(i-radius):(i+radius), (j-radius):(j+radius)] = 255
-                # image = whiteout(image, (i, j), radius)
+    return locs
 
-    return (np.array(locs), image)
-
-# given image of skittles, return image containing only black dots at skittle centers
-def isolate_centers(image):
+def reduce_to_centers(image):
+    '''given image of skittles, return image containing only black dots at skittle centers'''
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     # we're only going to work w/ saturation channel of hsv image
@@ -57,10 +51,12 @@ def isolate_centers(image):
     ret, centers = cv2.threshold(centers, 0, 255, cv2.THRESH_BINARY)
     return centers
 
-def find_skittles(image):
-    centers = isolate_centers(image)
-    locs, drawing = center_locations(centers)
+def find_skittles(image, radius=10):
+    '''returns copy of image with circles drawn on'''
+    copy = np.copy(image)
+    centers = reduce_to_centers(copy)
+    locs = center_locations(centers)
     for loc in locs:
-        image = cv2.circle(image, tuple(loc), 10, (0, 0, 255), 1)
+        copy = cv2.circle(copy, tuple(loc), radius, (0, 0, 255), 1)
 
-    return image
+    return copy
