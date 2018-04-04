@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import math
 
 def binarize(image, lower_bound=30):
     '''returns binary thresholded version of input image
@@ -19,21 +18,11 @@ def binarize(image, lower_bound=30):
 
     return threshold
 
-def center_locations(image, radius=5):
-    '''Returns list of tuples of centers of skittles '''
-    locs = []
-    x, y = image.shape
-    zeros = np.greater(image, 0)
-    for i in range(x):
-        for j in range(y):
-            if (not zeros[i ,j]):
-                locs.append([j, i])
-                # set surrounding area to white to avoid duplication
-                image[(i-radius):(i+radius), (j-radius):(j+radius)] = 255
-    return locs
-
-def reduce_to_centers(image):
-    '''given image of skittles, return image containing only black dots at skittle centers'''
+def find_centers(image, radius=5):
+    '''Returns list of tuples of centers of skittles
+    
+    Makes use of thresholding and distance transforms
+    '''
     threshold = binarize(image, 50)
 
     # apply distance transform, will help us find skittle centers
@@ -59,37 +48,50 @@ def reduce_to_centers(image):
     # add thresholded image to inverse background to isolate centers
     centers = threshold + inv_bg
     ret, centers = cv2.threshold(centers, 0, 255, cv2.THRESH_BINARY)
-    return centers
+    
+    locs = []
+    x, y = centers.shape
+    zeros = np.greater(centers, 0)
+    for i in range(x):
+        for j in range(y):
+            if (not zeros[i ,j]):
+                locs.append([j, i])
+                # set surrounding area to white to avoid duplication
+                centers[(i-radius):(i+radius), (j-radius):(j+radius)] = 255
+    return locs
 
 def draw_circles(image, radius=10):
-    '''returns copy of image with circles drawn on'''
+    '''
+    draw constant width circles on centers of skittles found by thresholding
+    '''
     copy = np.copy(image)
-    centers = reduce_to_centers(copy)
-    locs = center_locations(centers)
-    for loc in locs:
-        copy = cv2.circle(copy, tuple(loc), radius, (0, 0, 255), 1)
+    centers = find_centers(copy)
+    for center in centers:
+        copy = cv2.circle(copy, tuple(center), radius, (0, 0, 255), 1)
 
     return copy
 
-def draw_contours(image, lower_bound=30):
-    '''returns copy of image with contours drawn on :) '''
-    threshold = binarize(np.copy(image), lower_bound)
+def draw_contours(image, lower_bound=30, epsilon_scale=0.1):
+    '''returns copy of image with contours drawn on'''
     copy = np.copy(image)
+    threshold = binarize(np.copy(image), lower_bound)
 
     img, contours, hierarchy = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     centers, radii = [], []
     for contour in contours:
-        epsilon = 0.1 * cv2.arcLength(contour, True)
+        epsilon = epsilon_scale * cv2.arcLength(contour, True)
         poly = cv2.approxPolyDP(contour, epsilon, True)
         center, radius = cv2.minEnclosingCircle(poly)
-        center = (int(center[0]), int(center[1]))
-        centers.append(center)
-        radii.append(radius)
-        
-        cv2.putText(copy,'R' + str(radius), center, cv2.FONT_HERSHEY_SIMPLEX, 
-                    1,(255,255,255),1,cv2.LINE_AA)
+    
+        if radius < 30:    
+            center = (int(center[0]), int(center[1]))
+            centers.append(center)
+            radii.append(radius)
+            
+            cv2.putText(copy,'R' + str(radius)[:4], center, cv2.FONT_HERSHEY_SIMPLEX, 
+                        1,(255,255,255),1,cv2.LINE_AA)
 
 
     drawing = cv2.drawContours(copy, contours, -1, (0, 255, 0), 1)
-    return drawing
+    return drawing, centers, radii
