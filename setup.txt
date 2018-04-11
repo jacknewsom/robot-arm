@@ -1,0 +1,47 @@
+Setup for robot-arm
+
+This document assumes little to no prior programming experience. 
+
+
+For MacOS: 
+
+--- Text Editor ---
+You may want to install a text editor. I recommend using https://www.sublimetext.com/3
+
+Using the terminal, you can create a shortcut to access sublime with a terminal command, by creating a symbolic link.
+	mkdir /usr/local/bin
+	ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
+
+*If the first command returns an error, it means your user account doesn't have permission to create this subdirectory. This can be fixed by typing the following. 
+	sudo chown -R $(whoami) /usr/local/bin
+
+This allows you to open Sublime from terminal using the command:
+	subl filename.py
+
+
+--- Installing Python 3 ---
+Instructions pulled from: http://docs.python-guide.org/en/latest/starting/install3/osx/
+
+Install Homebrew (this is a package manager for macOS)
+	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+Add "brew" command to path
+	subl ~/.profile
+	export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+Now you can install Python3
+	brew install python
+
+
+--- Using Github ---
+Cheat Sheet: https://gist.github.com/davfre/8313299
+
+I recommend creating a folder in your computer called "code" and storing projects within it. 
+	mkdir code/engineeringclub/
+
+Then to clone robot-arm repo from github
+	git clone https://github.com/nooseman/robot-arm.git
+
+This copies the contents of the github repository to your desktop and allows you to mess around with the files. 
+
+
