@@ -8,7 +8,7 @@ For MacOS:
 ---- Text Editor -----
 You may want to install a text editor. I recommend using https://www.sublimetext.com/3
 
-Using the terminal, you can create a shortcut to access subl with a terminal command, by creating a symbolic link.
+Using the terminal, you can create a shortcut to access sublime with a terminal command, by creating a symbolic link.
 	mkdir /usr/local/bin
 	ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 This allows you to open Sublime from terminal using the command:
