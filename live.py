@@ -11,6 +11,7 @@ while(cv2.waitKey(1) & 0xFF != ord('q')):
     drawing = draw_circles(frame)
     contours, centers, radii = draw_contours(frame, param)
     binned = binarize(frame, param)
+    cv2.imshow('circles', drawing)
     cv2.imshow('binned', binned)
     cv2.imshow('contours', contours)
 
