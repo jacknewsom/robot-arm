@@ -1,4 +1,3 @@
-#Can automatically connect to arduino serial port
 import warnings
 import time
 import serial
