@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  25 APR 2018 14:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  9 MAY 2018 13:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -210,43 +210,27 @@ File: kinematics.png Graphic file (type png)
  <use kinematics.png>
 Package pdftex.def Info: kinematics.png used on input line 17.
 (pdftex.def)             Requested size: 440.04459pt x 167.82721pt.
+ [1
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.20 
-     
-? 
-! Emergency stop.
-<inserted text> 
-                $
-l.20 
-     
-End of file on the terminal!
-
- 
+{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./kinem
+atics.png>] (./kinematics.aux) ) 
 Here is how much of TeX's memory you used:
- 2159 strings out of 492995
- 31068 string characters out of 6132704
- 193875 words of memory out of 5000000
+ 2162 strings out of 492995
+ 31108 string characters out of 6132704
+ 195875 words of memory out of 5000000
  5709 multiletter control sequences out of 15000+600000
  7280 words of font info for 26 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,5n,32p,532b,187s stack positions out of 5000i,500n,10000p,200000b,80000s
-!  ==> Fatal error occurred, no output PDF file produced!
-n>  to continue without it.
-
- 
-Here is how much of TeX's memory you used:
- 2160 strings out of 492995
- 31207 string characters out of 6132704
- 193875 words of memory out of 5000000
- 5709 multiletter control sequences out of 15000+600000
- 7280 words of font info for 26 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 39i,5n,32p,532b,187s stack positions out of 5000i,500n,10000p,200000b,80000s
-!  ==> Fatal error occurred, no output PDF file produced!
-age, 92289 bytes).
+</usr/local/texlive/2017/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmr10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr17.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy10.pfb>
+Output written on kinematics.pdf (1 page, 92289 bytes).
 PDF statistics:
  39 PDF objects out of 1000 (max. 8388607)
  26 compressed objects within 1 object stream
