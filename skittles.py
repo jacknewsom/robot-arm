@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from motor_controls import *
 
 def binarize(image, lower_bound=30):
     '''returns binary thresholded version of input image
@@ -25,7 +26,7 @@ def find_centers(image, radius=5):
     '''
     threshold = binarize(image, 50)
 
-    # apply distance transform, will help us find skittle centers
+    # apply distance transform, will hlep us find skittle centers
     dist = cv2.distanceTransform(threshold, cv2.DIST_L2, 5)
     # normalize brightness values
     dist = cv2.normalize(dist, 0, 255, cv2.NORM_MINMAX)
@@ -82,6 +83,7 @@ def draw_contours(image, lower_bound=30, epsilon_scale=0.1):
     for contour in contours:
         epsilon = epsilon_scale * cv2.arcLength(contour, True)
         poly = cv2.approxPolyDP(contour, epsilon, True)
+        # center looks like (x, y)
         center, radius = cv2.minEnclosingCircle(poly)
     
         if radius < 30:    
@@ -95,3 +97,30 @@ def draw_contours(image, lower_bound=30, epsilon_scale=0.1):
 
     drawing = cv2.drawContours(copy, contours, -1, (0, 255, 0), 1)
     return drawing, centers, radii
+
+def draw_positions(image, lower_bound=30, epsilon_scale=0.1):
+    '''returns copy of image with contours drawn on'''
+    copy = np.copy(image)
+    threshold = binarize(np.copy(image), lower_bound)
+
+    img, contours, hierarchy = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    centers, radii = [], []
+    for contour in contours:
+        epsilon = epsilon_scale * cv2.arcLength(contour, True)
+        poly = cv2.approxPolyDP(contour, epsilon, True)
+        # center looks like (x, y)
+        center, radius = cv2.minEnclosingCircle(poly)
+
+        center = (int(center[0]), int(center[1]))
+        centers.append(center)
+        radii.append(radius)
+    
+    positions = calculate_position(centers, radii, copy.shape)
+    for i in range(len(positions)):
+        as_str = '(' + str(positions[i][0]) + ", " + str(positions[i][1])[:4] + ")"
+        cv2.putText(copy, as_str, centers[i], cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255,255,255),1, cv2.LINE_AA)
+
+    drawing = cv2.drawContours(copy, contours, -1, (0, 255, 0), 1)
+    return drawing
